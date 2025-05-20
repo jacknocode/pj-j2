@@ -10,3 +10,4 @@
 3. 新ワークフローを `src/mastra/index.ts` で登録し `mastra dev` から実行可能にする。
 4. `OPENAI_API_KEY` を `.env` 等で設定できるよう README に追記する。
 5. ワークフローの使い方や動作例を `docs/workflow.md` に記載する。
+6. 変更後は `npx tsc --noEmit` を実行して型エラーがないか確認する。
