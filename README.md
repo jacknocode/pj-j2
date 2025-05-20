@@ -11,3 +11,5 @@ OPENAI_API_KEY=sk-...
 ```
 
 ワークフローの実行手順や例は [docs/workflow.md](docs/workflow.md) を参照してください。
+
+設計に関する補足知識は [docs/knowledge/](docs/knowledge/) にまとめています。
