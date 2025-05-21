@@ -21,3 +21,15 @@
 ```
 
 上記のように、入力文に対して段階的に処理が行われ Wikipedia の検索結果が得られる。
+
+## ワークフロー構成
+
+`src/workflows/` には以下のサブディレクトリを用意している。
+
+- `analysis_and_requirements/` – 要求分析や要件整理のツールを配置
+- `design_assistant/` – 設計支援に関するワークフローを配置
+- `ui_generation/` – UI 生成に関するワークフローを配置
+- `documentation_and_formatting/` – ドキュメント化や整形処理用
+- `utilities_and_poc/` – 便利ツールや試作的なワークフローを管理
+
+それぞれのディレクトリ内には今後追加予定のツールを記載した `README.md` を置いてある。
