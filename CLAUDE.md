@@ -1,38 +1,10 @@
 # CLAUDE.md
 
-## プロジェクト概要
+共通ルールは AGENTS.md を参照。
 
-pj-j2 は TypeScript ベースの開発プロジェクトです。
+@AGENTS.md
 
-## ディレクトリ構成
+## Claude Code 固有設定
 
-```
-src/           - アクティブなソースコード
-docs/          - ドキュメント・ナレッジベース
-_archived/     - 使用停止したコード（参照専用、編集不要）
-```
-
-`_archived/` 以下は過去に使っていた Mastra ワークフローコードです。変更しないでください。
-
-## 開発ルール
-
-- 言語: TypeScript (strict モード)
-- モジュール: ES Modules (`"type": "module"`)
-- コードは `src/` 以下に配置
-- 型チェック: `npx tsc --noEmit`
-
-## コマンド
-
-```bash
-# 型チェック
-npx tsc --noEmit
-
-# TypeScript 実行
-npx tsx src/index.ts
-```
-
-## コーディング規約
-
-- strict モードでコンパイルが通ること
-- Zod でランタイムバリデーションを行う場合は `zod` を使用
-- 環境変数は `.env` で管理（`.env` はコミットしない）
+- `.claude/settings.json` にプロジェクト共有の権限設定がある
+- `.claude/` ディレクトリ内のファイルは Claude Code 専用の設定
