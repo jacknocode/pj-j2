@@ -1,15 +1,31 @@
 # pj-j2
 
-Mastra を利用したワークフロー開発用リポジトリです。詳細な仕様やタスクは `docs/` ディレクトリを参照してください。
+TypeScript ベースの開発プロジェクトです。
+
+## ディレクトリ構成
+
+```
+src/           - ソースコード
+docs/          - ドキュメント・ナレッジベース
+_archived/     - 過去のコード（Mastra workflow 等）
+```
 
 ## セットアップ
 
-OpenAI API を利用するため `OPENAI_API_KEY` を環境変数または `.env` に設定してください。
-
-```
-OPENAI_API_KEY=sk-...
+```bash
+npm install
 ```
 
-ワークフローの実行手順や例は [docs/workflow.md](docs/workflow.md) を参照してください。
+## 開発
 
-設計に関する補足知識は [docs/knowledge/](docs/knowledge/) にまとめています。
+```bash
+# 型チェック
+npm run typecheck
+
+# 実行
+npm start
+```
+
+## 環境変数
+
+必要に応じて `.env` に設定してください。

@@ -1,0 +1,21 @@
+{
+  "name": "j2-mastra-archived",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Archived Mastra workflow code (no longer active)",
+  "type": "module",
+  "scripts": {
+    "dev": "mastra dev"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^1.3.7",
+    "@mastra/core": "^0.7.0",
+    "mastra": "^0.4.4",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.3"
+  }
+}

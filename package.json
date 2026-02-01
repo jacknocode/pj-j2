@@ -1,20 +1,14 @@
 {
-  "name": "j2",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "mastra dev"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "name": "pj-j2",
+  "version": "2.0.0",
+  "private": true,
+  "description": "TypeScript project",
   "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "start": "tsx src/index.ts"
+  },
   "dependencies": {
-    "@ai-sdk/openai": "^1.3.7",
-    "@mastra/core": "^0.7.0",
-    "mastra": "^0.4.4",
     "zod": "^3.24.2"
   },
   "devDependencies": {
