@@ -1,0 +1,589 @@
+# Claude Code LP Generator - 完全ガイド
+
+## 概要
+
+このプロジェクトは、**Claude Code用のオーケストレーター型LP生成エージェント**です。MyVisionの詳細なLP構造分析に基づき、複数のサブエージェントとスキルを組み合わせた高度なシステムを提供します。
+
+### 主要な特徴
+
+- 🎯 **3つのLPパターン**: ブランド総合型、未経験特化型、イベント誘導型
+- 🤖 **オーケストレーター型アーキテクチャ**: 複数のサブエージェントが協調して動作
+- 📊 **データ駆動型アプローチ**: 心理トリガーとコンバージョン最適化
+- 🎨 **MyVisionデザインシステム**: ペガサスレッドと洗練されたタイポグラフィ
+- 🔧 **スキルベース実行**: CLI/APIから柔軟に呼び出し可能
+
+---
+
+## アーキテクチャ
+
+### 4層構造
+
+```
+┌─────────────────────────────────────────────────┐
+│         Orchestrator Agent (統括)              │
+│  - 全体フローの管理                             │
+│  - サブエージェントの調整                        │
+│  - 最終LP構造の生成と検証                        │
+└──────────────┬──────────────────────────────────┘
+               │
+      ┌────────┴────────┐
+      │                 │
+┌─────▼─────┐   ┌──────▼──────┐
+│ Content    │   │ Copywriting │
+│ Strategy   │   │ Agent       │
+│ Agent      │   │             │
+└────────────┘   └─────────────┘
+│                 │
+│ ・パターン選定  │ ・キャッチコピー生成
+│ ・戦略立案      │ ・CTA最適化
+│ ・セクション    │ ・心理トリガー活用
+│   優先順位付け  │
+└────────────────────────────┘
+
+              ┌───────────────┐
+              │    Skills     │
+              ├───────────────┤
+              │ generate-lp   │
+              │ export-config │
+              │ validate-lp   │
+              └───────────────┘
+```
+
+### コンポーネント一覧
+
+#### 1. エージェント
+
+| エージェント | 役割 | ファイル |
+|------------|------|---------|
+| **Orchestrator** | LP生成全体を統括 | `src/agents/orchestrator.ts` |
+| **Content Strategy** | ターゲット分析、パターン選定 | `src/agents/content-strategy-agent.ts` |
+| **Copywriting** | 説得力のあるコピー生成 | `src/agents/copywriting-agent.ts` |
+
+#### 2. スキル
+
+| スキル | 説明 | ファイル |
+|-------|------|---------|
+| **generate-lp** | LP生成のメインエントリーポイント | `src/skills/generate-lp-skill.ts` |
+| **export-config** | YAML/JSONへのエクスポート | `src/skills/export-config-skill.ts` |
+
+#### 3. パターン定義
+
+| パターン | ターゲット | ロジックフロー |
+|---------|-----------|--------------|
+| **brand_general_standard** | 幅広い層 | 信頼→論理→社会的証明→行動 |
+| **inexperienced_education** | 未経験者 | 問題→解決→サポート証明→行動 |
+| **event_speed_selection** | 能動的求職者 | 限定性→効率性→簡単参加→行動 |
+
+---
+
+## セットアップ
+
+### 1. 依存関係のインストール
+
+```bash
+# メインプロジェクト
+npm install
+
+# LP Generator
+cd lp-generator
+npm install
+cd ..
+```
+
+### 2. 必要なパッケージ
+
+```json
+{
+  "dependencies": {
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.4.11"
+  }
+}
+```
+
+---
+
+## 使用方法
+
+### 方法1: スキル経由（推奨）
+
+#### Quick Mode
+
+```bash
+cd lp-generator
+npm run generate-lp:quick
+```
+
+**出力例:**
+```
+🚀 LP Generator Skill - Starting...
+⚡ Quick Mode enabled
+
+📋 Business Goal: ハイクラス転職支援サービスのリード獲得
+👥 Target: mixed
+
+✅ LP Generation Complete!
+
+📈 Strategy Summary:
+  Pattern: brand_general_standard
+  Rationale: 幅広いターゲット層に対して、信頼性と実績を軸とした説得を行うため...
+
+📝 Generated Copy:
+  Hero Catchphrase: "最高の仕事が最高の人生をつくる"
+  Primary CTA: "30秒で完了 無料転職相談"
+
+💡 Recommendations:
+  • 選択されたパターン: brand_general_standard
+  • ターゲット: mixed
+  • 重点セクション: hero_section, trust_builder, conversion_optimizer
+```
+
+#### 未経験者向けLP生成
+
+```bash
+npm run generate-lp:inexperienced
+```
+
+#### カスタムオプション
+
+```bash
+npm run generate-lp -- \
+  --goal "IT業界向け転職サービス" \
+  --experience inexperienced \
+  --pattern inexperienced_education \
+  --verbose
+```
+
+### 方法2: プログラマティックAPI
+
+```typescript
+import { lpOrchestratorAgent } from './agents/orchestrator';
+import type { LPGenerationRequest } from './agents/orchestrator';
+
+// シンプルな生成
+const result = await lpOrchestratorAgent.quickGenerate(
+  'ハイクラス転職支援',
+  'experienced'
+);
+
+console.log(result.generated_copy.hero_catchphrase);
+// => "最高の仕事が最高の人生をつくる"
+
+// 詳細なカスタマイズ
+const request: LPGenerationRequest = {
+  business_goal: 'コンサル未経験者向け転職支援',
+  target_audience: {
+    demographics: {
+      age_range: '25-35',
+      experience_level: 'inexperienced',
+      target_industry: ['Consulting'],
+    },
+    psychographics: {
+      motivations: ['年収アップ', 'キャリアチェンジ'],
+      pain_points: ['選考対策の不安', 'フェルミ推定が不安'],
+      decision_factors: ['実績', '専門性', 'サポート品質'],
+    },
+    behavior: {
+      search_intent: 'research',
+      urgency_level: 'medium',
+    },
+  },
+  key_metrics: {
+    avg_salary_increase: '122万円',
+    support_count: '8,000名以上',
+    success_rate: '85%',
+    rating: 4.8,
+  },
+};
+
+const detailedResult = await lpOrchestratorAgent.generateLP(request);
+```
+
+### 方法3: YAML/JSONエクスポート
+
+生成したLP構造を設定ファイルとしてエクスポート:
+
+```typescript
+import { exportConfigSkill } from './skills/export-config-skill';
+
+// YAML形式でエクスポート
+await exportConfigSkill.execute({
+  structure: result.lp_structure,
+  format: 'yaml',
+  outputPath: 'output/lp-config.yaml',
+  pretty: true,
+});
+
+// JSON形式でエクスポート
+await exportConfigSkill.execute({
+  structure: result.lp_structure,
+  format: 'json',
+  outputPath: 'output/lp-config.json',
+  pretty: true,
+});
+```
+
+**生成されるYAML例:**
+
+```yaml
+# MyVision LP Structure Configuration
+# Generated by LP Generator Orchestrator
+# Pattern: brand_general_standard
+
+metadata:
+  company_name: "株式会社MyVision"
+  industry: "Consulting Recruitment"
+  key_competency: "Operational Excellence & Executive Network"
+
+pattern:
+  id: "brand_general_standard"
+  target: "Wide (Potential & Experienced)"
+  logic_flow: "trust_logic_social_action"
+  description: "信頼醸成→論理的説得→社会的証明→行動喚起の流れで、幅広い層に訴求"
+
+hero_section:
+  meaning: "瞬間的な関心喚起とブランドイメージの定着"
+  catchphrase:
+    content: "最高の仕事が最高の人生をつくる"
+    logic: "benefit_driven"
+  key_metric_salary:
+    value: "122万円"
+    logic: "anchoring_effect"
+  social_proof_count:
+    value: "8,000名以上"
+    logic: "bandwagon_effect"
+  trust_indicator_rating:
+    value: 4.8
+    source: "Google口コミ"
+    logic: "social_proof"
+  primary_cta:
+    text: "30秒で完了 無料転職相談"
+    link: "#contact"
+    logic: "low_hurdle"
+```
+
+---
+
+## LP Pattern詳細解説
+
+### Pattern 1: Brand General Standard
+
+**適用シーン:**
+- 幅広いターゲット層（経験者・未経験者混在）
+- ブランド認知拡大
+- 検索広告やSNS広告の着地ページ
+
+**構成要素:**
+1. **Hero Section** - 実績数値で権威性を確立
+2. **Trust Builder** - 提携ファームのロゴ、アドバイザーの経歴
+3. **Service Differentiation** - 独自の選考対策プログラム
+4. **Success Data Repository** - 具体的な支援事例
+5. **Conversion Optimizer** - 最終CTA
+
+**心理トリガー:**
+- アンカリング効果（年収122万円アップ）
+- バンドワゴン効果（8,000名以上の実績）
+- 権威の転移（BCG、デロイト出身）
+- リスクリバーサル（無料相談）
+
+**コピー例:**
+```
+見出し: 最高の仕事が最高の人生をつくる
+CTA: 30秒で完了 無料転職相談
+統計: 平均年収UP額 122万円 / 累計支援実績 8,000名以上
+```
+
+---
+
+### Pattern 2: Inexperienced Education
+
+**適用シーン:**
+- コンサル業界未経験者
+- 他業界からのキャリアチェンジ希望者
+- SEO記事からの流入
+
+**構成要素:**
+1. **Hero Section** - 共感的メッセージで不安を受け止め
+2. **Market Context** - 業界の成長性、DX需要の説明
+3. **Service Differentiation** - フェルミ推定・ケース面接対策の詳細
+4. **Success Data Repository** - 他業界からの転職成功例
+5. **Conversion Optimizer** - 「未経験からの相談」CTA
+
+**心理トリガー:**
+- 共感トリガー（「未経験でも大丈夫」）
+- 不安解消（体系的な選考対策）
+- 類似性マッチング（同じ境遇の成功者）
+- 知識の製品化（100ページ超の対策資料）
+
+**コピー例:**
+```
+見出し: コンサル未経験でも大丈夫。あなたの経験が活きる
+CTA: 未経験からの転職相談
+統計: 未経験者の9割が内定獲得 / SE・営業経験が活かせる
+```
+
+---
+
+### Pattern 3: Event Speed Selection
+
+**適用シーン:**
+- 1Day選考会などのイベント誘導
+- 緊急性の高い求職者
+- リターゲティング広告
+
+**構成要素:**
+1. **Hero Section** - 限定性と締切を強調
+2. **Event Details** - 1Dayで完結する効率性
+3. **Simple Entry** - 参加ハードルを極限まで下げる
+4. **Trust Builder** - CEO登壇などの権威付け
+
+**心理トリガー:**
+- 希少性（限定30名）
+- 緊急性（締切間近）
+- FOMO（見逃すことへの恐れ）
+- 効率性（1日で完結）
+
+**コピー例:**
+```
+見出し: 【限定30名】1Day選考会 - その日に内定が決まる
+CTA: 今すぐ選考会に申し込む
+統計: 通常3ヶ月の選考が1日で完了 / 参加者の内定率 65%
+```
+
+---
+
+## コンポーネントロジック一覧
+
+LP構成要素には、それぞれ「マーケティング的役割」が定義されています。
+
+| Logic Type | 意味 | 使用例 |
+|-----------|------|--------|
+| `value_prop_quantitative` | 定量的価値提案 | 年収122万円アップ |
+| `authority_proof` | 権威性の証明 | BCG出身アドバイザー |
+| `empathy_trigger` | 共感トリガー | 未経験者の成功事例 |
+| `urgency_scarcity` | 緊急性・限定性 | 限定30名、締切間近 |
+| `anchoring_effect` | アンカリング効果 | 平均年収UP 122万円 |
+| `bandwagon_effect` | バンドワゴン効果 | 8,000名以上が利用 |
+| `social_proof` | 社会的証明 | Google口コミ 4.8 |
+| `low_hurdle` | 心理的ハードル低下 | 30秒で完了 |
+| `risk_reversal` | リスクリバーサル | 完全無料 |
+| `similarity_matching` | 類似性マッチング | あなたと同じ境遇の成功者 |
+
+---
+
+## ディレクトリ構造
+
+```
+lp-generator/
+├── src/
+│   ├── agents/                    # サブエージェント
+│   │   ├── orchestrator.ts        # 統括エージェント
+│   │   ├── content-strategy-agent.ts
+│   │   └── copywriting-agent.ts
+│   ├── skills/                    # 実行可能スキル
+│   │   ├── generate-lp-skill.ts   # LP生成スキル
+│   │   └── export-config-skill.ts # 設定エクスポートスキル
+│   ├── templates/                 # HTMLテンプレート
+│   │   └── landing-page.ts        # LP生成エンジン
+│   ├── types/                     # TypeScript型定義
+│   │   ├── lp-config.ts           # 汎用LP設定
+│   │   └── myvision-lp-patterns.ts # MyVisionパターン定義
+│   ├── styles/
+│   │   └── design-tokens.css      # MyVisionデザイントークン
+│   ├── index.ts                   # メインエクスポート
+│   └── main.ts                    # デモ実行
+├── output/                        # 生成ファイル出力先
+│   ├── landing-page.html
+│   └── lp-config.yaml
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
+
+---
+
+## Claude Code統合
+
+### Skillとして登録
+
+Claude Codeでは、このLP GeneratorをSkillとして登録できます。
+
+**`.claude/skills/` ディレクトリに配置:**
+
+```bash
+# プロジェクトルートに配置
+mkdir -p .claude/skills
+ln -s ../../lp-generator/src/skills/generate-lp-skill.ts .claude/skills/generate-lp.ts
+```
+
+**使用例:**
+
+```
+User: LP を生成してください。ターゲットは未経験者です。
+
+Claude: かしこまりました。未経験者向けのLPを生成します。
+[generate-lp skillを実行]
+
+LP生成が完了しました。
+
+パターン: inexperienced_education
+見出し: "コンサル未経験でも大丈夫。あなたの経験が活きる"
+CTA: "未経験からの転職相談"
+
+このLPは、未経験者の不安を受け止め、業界の成長性とキャリアチェンジの
+可能性を論理的に説明する構成になっています。
+```
+
+---
+
+## 拡張・カスタマイズ
+
+### 新しいパターンの追加
+
+`src/types/myvision-lp-patterns.ts` に新しいパターンを追加:
+
+```typescript
+export const PATTERN_TEMPLATES: Record<LPPatternType, Partial<MyVisionLPStructure>> = {
+  // 既存パターン...
+
+  // 新しいパターン
+  custom_pattern: {
+    pattern: {
+      id: 'custom_pattern',
+      target: 'Your target audience',
+      logic_flow: 'custom_flow',
+      description: 'Your description',
+    },
+    // ...
+  },
+};
+```
+
+### 新しいサブエージェントの追加
+
+```typescript
+// src/agents/design-system-agent.ts
+export class DesignSystemAgent {
+  recommendColors(industry: string) {
+    // カスタムロジック
+  }
+}
+```
+
+Orchestratorで呼び出し:
+
+```typescript
+import { designSystemAgent } from './design-system-agent';
+
+// orchestrator.ts内で
+const designRecommendations = designSystemAgent.recommendColors(request.industry);
+```
+
+### A/Bテストバリエーションの生成
+
+```typescript
+const ctaVariations = copywritingAgent.generateCTA(pattern, 'primary');
+
+console.log('A版:', ctaVariations.primary);
+console.log('B版:', ctaVariations.alternatives[0]);
+console.log('C版:', ctaVariations.alternatives[1]);
+```
+
+---
+
+## トラブルシューティング
+
+### 型エラーが出る
+
+```bash
+cd lp-generator
+npm run type-check
+```
+
+型定義が不足している場合は `@types/node` をインストール:
+
+```bash
+npm install --save-dev @types/node
+```
+
+### エージェントが動作しない
+
+依存関係を確認:
+
+```bash
+npm list zod tsx typescript
+```
+
+### 生成されたHTMLが表示されない
+
+出力ディレクトリのパーミッションを確認:
+
+```bash
+ls -la output/
+chmod 755 output/
+```
+
+---
+
+## ベストプラクティス
+
+### 1. パターン選定
+
+- **経験者が主**: `brand_general_standard`
+- **未経験者が主**: `inexperienced_education`
+- **イベント誘導**: `event_speed_selection`
+
+### 2. コピーライティング
+
+- **定量的実績を優先**: 「年収122万円アップ」など具体的な数字
+- **心理的ハードルを下げる**: 「30秒で完了」「無料」
+- **共感→解決の流れ**: 不安を受け止めてから解決策を提示
+
+### 3. A/Bテスト推奨項目
+
+- ヒーローキャッチフレーズ
+- CTAボタンの文言
+- 統計データの配置順序
+- セクションの順序
+
+---
+
+## 今後の拡張予定
+
+- [ ] 複数のデザインテーマ対応
+- [ ] リアルタイムプレビュー機能
+- [ ] A/Bテスト自動化
+- [ ] フォーム統合（リード獲得）
+- [ ] アナリティクス統合
+- [ ] 多言語対応
+
+---
+
+## 参考資料
+
+### MyVision分析レポート
+
+- [MyVision LP構造分析](./myvision-lp-analysis.md)
+- [デザイントークン定義](../lp-generator/src/styles/design-tokens.css)
+- [パターン定義](../lp-generator/src/types/myvision-lp-patterns.ts)
+
+### 関連ドキュメント
+
+- [LP Generator使用ガイド](./lp-generator-guide.md)
+- [Design Tokens Reference](../lp-generator/src/styles/design-tokens.css)
+
+---
+
+## サポート
+
+質問や問題がある場合は、プロジェクトのIssueを作成してください。
+
+---
+
+**Built with ❤️ for MyVision**

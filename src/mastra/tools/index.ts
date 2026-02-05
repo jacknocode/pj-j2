@@ -1,6 +1,8 @@
 import { createTool } from '@mastra/core/tools';
 import { z } from 'zod';
 
+export { lpGeneratorTool } from './lpGeneratorTool';
+
 interface GeocodingResponse {
   results: {
     latitude: number;
